@@ -1,12 +1,21 @@
+#List of required packages
+packages <- c("tidyverse", "corrplot", "caret", "GGally")
 
-# install.packages("tidyverse")
-# install.packages("corrplot")
-# install.packages("caret")
+# Install any packages that are not already installed
+installed_packages <- rownames(installed.packages())
+for (pkg in packages) {
+  if (!(pkg %in% installed_packages)) {
+    install.packages(pkg)
+  }
+}
+
+
 
 library(tidyverse) # data manipulation (dplyr) and plotting (ggplot2)
 library(corrplot)  # correlation heatmap
 library(caret)     # preprocessing (encoding, scaling)
-
+library(ggplot2)
+library(GGally)
 
 # --- TASK A: Data Understanding ---------------------------------------------------
 
@@ -74,7 +83,10 @@ cor_matrix <- cor(df[, num_cols])
 cor_matrix
 #######  heatmap
 
+ggcorr(df, label = TRUE)
+
 # 2. Scatter plots between numeric pairs
+##automatic dont use column name
 
 ggplot(df, aes(x = math_score, y = reading_score)) + geom_point(alpha = 0.5)
 ggplot(df, aes(x = reading_score, y = writing_score)) + geom_point(alpha = 0.5)
@@ -108,7 +120,7 @@ idx <- sample(1:nrow(df), 10)
 df$math_score[idx] <- NA
 
 colSums(is.na(df))
-
+##for loop
 
 
 #-- Encoding categorical variables
@@ -121,7 +133,7 @@ df$test_preparation_course <- as.factor(df$test_preparation_course)
 
 df_dummy <- model.matrix(~ . - 1, data = df)  # one-hot encode
 df_dummy <- as.data.frame(df_dummy)
-
+## for loop automatic
 
 head(df_dummy)
 
